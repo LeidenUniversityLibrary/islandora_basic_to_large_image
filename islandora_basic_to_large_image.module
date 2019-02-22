@@ -1,0 +1,94 @@
+<?php
+
+/**
+ * @file
+ * From Basic Image to Large Image
+ *
+ *
+ *  Copyright 2019 Leiden University Library
+ *
+ *  This file is part of islandora_basic_to_large_image.
+ *
+ *  islandora_basic_to_large_image is free software: you can redistribute it
+ *  and/or modify it under the terms of the GNU General Public License as
+ *  published by the Free Software Foundation, either version 3 of the License,
+ *  or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+// Permissions.
+define('ISLANDORA_BASIC_TO_LARGE_IMAGE', 'Basic to Large Image');
+
+/**
+ * Implements hook_menu().
+ */
+function islandora_basic_to_large_image_menu() {
+  return array(
+    'islandora/object/%islandora_object/manage/object/basic_to_large_image' => array(
+      'title' => 'Upgrade to large image',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('islandora_basic_to_large_image_form', 2),
+      'type' => MENU_LOCAL_ACTION,
+      'file' => 'includes/large_image.form.inc',
+      'access callback' => 'islandora_basic_to_large_image_access',
+      'access arguments' => array(2),
+    ),
+  );
+}
+
+/**
+ * Implements hook_permission().
+ */
+function islandora_basic_to_large_image_permission() {
+  return array(
+    ISLANDORA_BASIC_TO_LARGE_IMAGE => array(
+      'title' => t('Basic to Large Image'),
+      'description' => t('Upgrade basic image to large image'),
+    ),
+  );
+}
+
+/**
+ * Access callback for basic to large image.
+ *
+ * @param AbstractObject $object
+ *   The object to test if it is a basic image
+ *
+ * @return bool
+ *   TRUE if $object represents a basic image and it is accessible, then we can
+ *   show the form and upgrade it to a large image; otherwise, FALSE.
+ */
+function islandora_basic_to_large_image_access(AbstractObject $object) {
+  if (!in_array(islandora_basic_to_large_image_cmodel_basic_image(), $object->models, TRUE)) {
+    //return FALSE;
+  }
+  return islandora_object_access(ISLANDORA_MANAGE_PROPERTIES, $object);
+}
+
+/**
+ * Returns content model for basic image.
+ *
+ * @return array
+ *   the content model for basic image.
+ */
+function islandora_basic_to_large_image_cmodel_basic_image() {
+  return 'islandora:sp_basic_image';
+}
+
+/**
+ * Returns content model for large image.
+ *
+ * @return array
+ *   the content model for large image.
+ */
+function islandora_basic_to_large_image_cmodel_large_image() {
+  return 'islandora:sp_large_image_cmodel';
+}

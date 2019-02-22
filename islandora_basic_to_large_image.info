@@ -1,0 +1,8 @@
+name = Islandora Basic to Large Image
+description = Adds button to the manage tab of basic images to upgrade to large image by uploading a TIFF. 
+package = Islandora Tools
+dependencies[] = islandora
+dependencies[] = islandora_basic_image
+dependencies[] = islandora_large_image
+version = "7.x-1.x-dev"
+core = "7.x"
