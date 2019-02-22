@@ -68,7 +68,7 @@ function islandora_basic_to_large_image_permission() {
  */
 function islandora_basic_to_large_image_access(AbstractObject $object) {
   if (!in_array(islandora_basic_to_large_image_cmodel_basic_image(), $object->models, TRUE)) {
-    //return FALSE;
+    return FALSE;
   }
   return islandora_object_access(ISLANDORA_MANAGE_PROPERTIES, $object);
 }
