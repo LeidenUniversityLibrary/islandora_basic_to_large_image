@@ -55,29 +55,13 @@ function islandora_basic_to_large_image_form(array $form, array &$form_state, Ab
 }
 
 function islandora_basic_to_large_image_form_submit(array $form, array &$form_state) {
-  module_load_include('inc', 'islandora', 'includes/derivatives');
+  module_load_include('inc', 'islandora_basic_to_large_image', 'includes/utilities');
   $object = islandora_object_load($form_state['values']['id']);
   if ($form_state['values']['file']) {
     $file = file_load($form_state['values']['file']);
     $path = drupal_realpath($file->uri);
-    $operations = array();
-    $operations[] = array(
-      'islandora_basic_to_large_image_process_object_operation',
-      array($object, $path),
-    );
-    $operations[] = array(
-      'islandora_basic_to_large_image_derivatives_operation',
-      array($object),
-    );
-    $batch = array(
-      'title' => t('Upgrade this image'),
-      'operations' => $operations,
-      'finished' => 'islandora_basic_to_large_image_process_object_batch_finished',
-      'file' => drupal_get_path('module', 'islandora_basic_to_large_image') . '/includes/utilities.inc',
-    );
-
+    $batch = islandora_basic_to_large_image_batch($object, $path);
     batch_set($batch);
-
   }
-  $form_state['redirect'] = "islandora/object/{$form_state['values']['id']}/manage";
+  $form_state['redirect'] = "islandora/object/{$form_state['values']['id']}/regenerate";
 }

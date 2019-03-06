@@ -78,6 +78,25 @@ function islandora_basic_to_large_image_process_object($object, $filepath) {
   return TRUE;
 }
 
+function islandora_basic_to_large_image_batch($object, $path) {
+  $operations = array();
+  $operations[] = array(
+    'islandora_basic_to_large_image_process_object_operation',
+    array($object, $path),
+  );
+/*    $operations[] = array(
+      'islandora_basic_to_large_image_derivatives_operation',
+      array($object->id),
+    );*/
+  $batch = array(
+    'title' => t('Upgrade this image'),
+    'operations' => $operations,
+    'finished' => 'islandora_basic_to_large_image_process_object_batch_finished',
+    'file' => drupal_get_path('module', 'islandora_basic_to_large_image') . '/includes/utilities.inc',
+  );
+  return $batch;
+}
+
 function islandora_basic_to_large_image_process_object_operation($object, $path, &$context) {
   module_load_include('inc', 'islandora_basic_to_large_image', 'includes/utilities');
   $result = islandora_basic_to_large_image_process_object($object, $path);
@@ -86,11 +105,23 @@ function islandora_basic_to_large_image_process_object_operation($object, $path,
   }
 }
 
-function islandora_basic_to_large_image_derivatives_operation($object, &$context) {
-  return;
+function islandora_basic_to_large_image_derivatives_operation($pid, &$context) {
+  // TODO: add code to generate derivitives.
+  // Code below does not work because the object still thinks it is a basic image
+  // but it really is a large image already.
+  /* Attempt 1:
+  $object = islandora_object_load($pid);
   module_load_include('inc', 'islandora', 'includes/derivatives');
   islandora_remove_defer_derivatives_flag($object);
   $results = islandora_do_derivatives($object, array('force' => TRUE));
+  */
+  /* Attempt 2:
+  $object = islandora_object_load($pid);
+  module_load_include('inc', 'islandora_large_image', 'includes/derivatives');
+  islandora_large_image_create_jp2_derivative($object, TRUE);
+  islandora_large_image_create_jpg_derivative($object, TRUE);
+  islandora_large_image_create_tn_derivative($object, TRUE);
+  */
 }
 
 function islandora_basic_to_large_image_process_object_batch_finished($success, $results, $operations) {
