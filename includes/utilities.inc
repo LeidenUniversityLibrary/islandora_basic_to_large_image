@@ -126,7 +126,7 @@ function islandora_basic_to_large_image_derivatives_operation($pid, &$context) {
 
 function islandora_basic_to_large_image_process_object_batch_finished($success, $results, $operations) {
   if ($success && count($results) > 0) {
-    drupal_set_message(t('Upgrade was succesful.'), 'status');
+    drupal_set_message(t('Upgrade was successful. Please check if all derivatives are generated after a minute or two.'), 'status');
   }
   else {
     drupal_set_message(t('Upgrade failed.'), 'error');

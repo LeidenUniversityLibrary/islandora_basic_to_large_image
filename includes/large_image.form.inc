@@ -63,5 +63,5 @@ function islandora_basic_to_large_image_form_submit(array $form, array &$form_st
     $batch = islandora_basic_to_large_image_batch($object, $path);
     batch_set($batch);
   }
-  $form_state['redirect'] = "islandora/object/{$form_state['values']['id']}/regenerate";
+  $form_state['redirect'] = "islandora/object/{$form_state['values']['id']}/manage";
 }
